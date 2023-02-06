@@ -2,6 +2,8 @@
 name: Kaniko build
 on:
   push:
+    branches:
+      - "main"
     tags:
       - "*.*.*"
 jobs:
