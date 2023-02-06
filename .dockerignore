@@ -1,6 +1,5 @@
 .github
 .git
-go.sum
 cloud-native-merge-sort
 main
 *.yaml
