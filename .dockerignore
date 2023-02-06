@@ -1,0 +1,8 @@
+.github
+.git
+go.mod
+go.sum
+cloud-native-merge-sort
+main
+*.yaml
+Dockerfile
