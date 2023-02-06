@@ -1,5 +1,6 @@
 FROM golang:1.20
+WORKDIR /app
 COPY . .
 RUN go mod download
 RUN go build
-ENTRYPOINT [ "./cloud-native-merge-sort" ]
+ENTRYPOINT ["/app/cloud-native-merge-sort"]

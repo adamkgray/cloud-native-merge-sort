@@ -55,4 +55,9 @@ spec:
         name: main
         command: ["/bin/sh"]
         args: ["-c", "date"]
+        env:
+        - name: JOB_SA
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
 ---
