@@ -1,6 +1,7 @@
 .github
 .git
 go.sum
+go.mod
 cloud-native-merge-sort
 main
 *.yaml
