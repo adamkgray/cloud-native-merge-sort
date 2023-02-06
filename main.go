@@ -2,17 +2,13 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strconv"
 
-	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/util/homedir"
+	"k8s.io/client-go/rest"
 )
 
 func cloudNativeSort(N []int, clientset *kubernetes.Clientset) []int {
@@ -27,12 +23,10 @@ func cloudNativeSort(N []int, clientset *kubernetes.Clientset) []int {
 		*/
 
 		/* just a little test */
-		jobsClient := clientset.BatchV1().Jobs(apiv1.NamespaceDefault)
-		pods, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
+		_, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
 		if err != nil {
 			panic(err.Error())
 		}
-		fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
 
 		left := cloudNativeSort(N[:mid], clientset)
 		right := cloudNativeSort(N[mid:], clientset)
@@ -86,21 +80,12 @@ func main() {
 		N[i-1] = integer
 	}
 
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	// use the current context in kubeconfig
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	// creates the in-cluster config
+	config, err := rest.InClusterConfig()
 	if err != nil {
 		panic(err.Error())
 	}
-
-	// create the clientset
+	// creates the clientset
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
